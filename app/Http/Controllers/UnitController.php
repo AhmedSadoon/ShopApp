@@ -25,6 +25,20 @@ class UnitController extends Controller
             'unit_code'=>'required',
         ]);
 
+
+        $unitName=$request->input('unit_name');
+        $unitCode=$request->input('unit_code');
+
+        if(!$this->unitNameExists($unitName)){
+            return redirect()->back();
+        }
+
+
+        if(!$this->unitCodeExists($unitCode)){
+            return redirect()->back();
+        }
+
+
         $unit=new Unit();
         $unit->unit_name=$request->input('unit_name');
         $unit->unit_code=$request->input('unit_code');
@@ -65,6 +79,21 @@ class UnitController extends Controller
             'unit_name'=>'required',
         ]);
 
+        $unitName=$request->input('unit_name');
+        $unitCode=$request->input('unit_code');
+
+        if(!$this->unitNameExists($unitName)){
+            return redirect()->back();
+        }
+
+
+        if(!$this->unitCodeExists($unitCode)){
+            return redirect()->back();
+        }
+
+
+
+
         $unitID=intval($request->input('unit_id'));
 
         $unit=Unit::find($unitID);
@@ -79,17 +108,53 @@ class UnitController extends Controller
         return redirect()->back();
 
 
-
-
-
-
-
-
     }
 
     public function search(Request $request)
     {
 
     }
+
+    /**
+     * التحقق من اسم اليونت موجود لو لا
+     */
+    private function unitNameExists($unitName){
+
+        $unit=Unit::where(
+            'unit_name', '=' , $unitName
+    )->first();
+
+    if(! is_null($unit)){
+
+            Session::flash('message','Unit Name {'.$unitName.'}  already exists');
+            return false;
+
+         }
+
+         return true;
+
+
+    }
+
+    /**
+     * التحقق من كود اليونت موجود لو لا
+     */
+
+    private function unitCodeExists($unitCode){
+
+        $unit=Unit::where(
+            'unit_code', '=' , $unitCode
+    )->first();
+
+    if(! is_null($unit)){
+        Session::flash('message','Unit Code {'.$unitCode.'}  already exists');
+        return false;
+    }
+
+        return true;
+
+    }
+
+
 
 }
