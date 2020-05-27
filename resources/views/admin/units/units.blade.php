@@ -70,7 +70,27 @@
                     @endforeach
                    </div>
 
-                   {{ $units->links() }}
+
+                   {{--الطريقة الاولى {{ (is_a(! $units,'LengthAwarePaginater') ? $units->links() : '') }} --}}
+
+                   {{-- الطريقة الثانية --}}
+                   {{ (!is_null($showLinks) && $showLinks) ? $units->links() : '' }}
+
+
+                   <form action="{{ route('search-units') }}" method="POST">
+                       @csrf
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="unit_search">Search</label>
+                                <input type="text" class="form-control" id="unit_search" placeholder="Unit Search" name="unit_search" required>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <button type="submit" class="btn btn-primary">Search </button>
+                            </div>
+
+                        </div>
+                   </form>
 
                 </div>
             </div>

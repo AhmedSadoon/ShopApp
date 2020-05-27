@@ -60,6 +60,8 @@ Route::group(['auth','user_is_admin'], function() {
     Route::post('units','UnitController@store');
     Route::delete('units','UnitController@destroy');
     Route::put('units','UnitController@update');
+    Route::post('search-units','UnitController@search')->name('search-units');
+
     //Categories
     Route::get('categories','CategoryController@index')->name('categories');
 
