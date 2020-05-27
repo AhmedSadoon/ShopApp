@@ -46,14 +46,22 @@
 
                         <div class="col-md-3">
                            <div class="alert alert-primary" role="alert">
-                               <span>
-                                   <form action="{{ route('units') }}" method="POST" style="position: relative;">
-                                       @csrf
-                                       <input type="hidden" name="_method" value="delete"/>
-                                       <input type="hidden" name="unit_id" value="{{ $unit->id }}"/>
-                                       <button type="submit" class="delete-btn"><i class="fas fa-trash-alt"></i></button>
-                                   </form>
-                               </span>
+                            <span class="buttons-span">
+
+                                <span><a class="edit-unit"
+                                     data-unitname="{{ $unit->unit_name }}"
+                                     data-unitcode="{{ $unit->unit_code }}"
+                                     data-unitid="{{ $unit->id }}" ><i class="fas fa-edit"></i></a></span>
+
+                                     <span><a class="delete-unit"
+                                    data-unitname="{{ $unit->unit_name }}"
+                                    data-unitcode="{{ $unit->unit_code }}"
+                                     data-unitid="{{ $unit->id }}"> <i class="fas fa-trash-alt"></i></a></span>
+
+                            </span>
+
+
+
                             <p> {{ $unit->unit_name }} , {{ $unit->unit_code }}</p>
 
                            </div>
@@ -69,6 +77,89 @@
         </div>
     </div>
 </div>
+
+
+
+
+
+
+
+
+<div class="modal edit-window" tabindex="-1" role="dialog" id="edit-window">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Unit</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+
+    <form action="{{ route('units') }}" method="POST" >
+            @csrf
+            <div class="modal-body">
+
+                <div class="form-group col-md-6">
+                    <label for="edit_unit_name">Unit Name</label>
+                    <input type="text" class="form-control"
+                    id="edit_unit_name" placeholder="Unit Name" name="unit_name" required>
+                  </div>
+
+                  <div class="form-group col-md-6">
+                    <label for="edit_unit_code">Unit Code</label>
+                    <input type="text" class="form-control" id="edit_unit_code" placeholder="Unit Code" name="unit_code" required>
+                  </div>
+
+                  <input type="hidden" name="unit_id" id="edit_unit_id"/>
+                  <input type="hidden" name="_method" value="PUT"/>
+
+
+              </div>
+
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">Update</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+
+    </form>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <div class="modal delete-window" tabindex="-1" role="dialog" id="delete-window">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Delete Unit</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+
+        <form action="{{ route('units') }}" method="POST" style="position: relative;">
+            <div class="modal-body">
+                <p id="delete-message"></p>
+                   @csrf
+                   <input type="hidden" name="_method" value="delete"/>
+                   <input type="hidden" name="unit_id" value="" id="unit_id"/>
+            </div>
+
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Delete</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+      </form>
+      </div>
+    </div>
+  </div>
+
+
+
 
 
 @if(Session::has('message'))
@@ -92,19 +183,67 @@
 
 @endsection
 
-@if(Session::has('message'))
-    @section('scripts')
+@section('scripts')
+<script>
 
-    <script>
+    jQuery(document).ready(function(){
+        var $deleteUnit=$('.delete-unit');
+        var $deleteWindow=$('#delete-window');
+        var $unitId=$('#unit_id');
 
-        jQuery(document).ready(function($){
-            var $toast=$('.toast').toast({
-                autohide:false
-            });
-            $toast.toast('show');
+        var $deleteMessage=$('#delete-message');
+
+        $deleteUnit.on('click',function(element){
+            element.preventDefault();
+            var unit_id=$(this).data('unitid');
+            var $unitName=$(this).data('unitname');
+            var $unitCode=$(this).data('unitcode');
+            $unitId.val(unit_id);
+            $deleteMessage.text('Are you sure you want to delete ' + $unitName + ' with code '+$unitCode+' ? ');
+            $deleteWindow.modal('show');
+
         });
-    </script>
 
-    @endsection
-@endif
 
+        var $editUnit=$('.edit-unit');
+        var $editWindow=$('#edit-window');
+        var $edit_unit_name=$('#edit_unit_name');
+        var $edit_unit_code=$('#edit_unit_code');
+        var $edit_unit_id=$('#edit_unit_id');
+
+        $editUnit.on('click',function(element){
+            element.preventDefault();
+            var $unit_id=$(this).data('unitid');
+            var $unitName=$(this).data('unitname');
+            var $unitCode=$(this).data('unitcode');
+
+            $edit_unit_code.val($unitCode);
+            $edit_unit_name.val($unitName);
+            $edit_unit_id.val($unit_id);
+
+            $editWindow.modal('show');
+        });
+
+
+    });
+
+</script>
+
+
+
+    @if(Session::has('message'))
+
+
+        <script>
+
+            jQuery(document).ready(function($){
+                var $toast=$('.toast').toast({
+                    autohide:false
+                });
+                $toast.toast('show');
+            });
+        </script>
+
+
+    @endif
+@endsection
