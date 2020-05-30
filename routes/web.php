@@ -60,7 +60,7 @@ Route::group(['auth','user_is_admin'], function() {
     Route::post('units','UnitController@store');
     Route::delete('units','UnitController@destroy');
     Route::put('units','UnitController@update');
-    Route::post('search-units','UnitController@search')->name('search-units');
+    Route::get('search-units','UnitController@search')->name('search-units');
 
     //Categories
     Route::get('categories','CategoryController@index')->name('categories');
@@ -72,6 +72,11 @@ Route::group(['auth','user_is_admin'], function() {
     //Tags
     Route::get('tags','TagController@index')->name('tags');
     Route::post('tags','TagController@store');
+    Route::post('search-tags','TagController@search')->name('search-tags');
+    Route::delete('tags','TagController@destroy');
+    Route::put('tags','TagController@update');
+    Route::get('search-tags','TagController@search')->name('search-tags');
+
 
     //Payments
     //Orders

@@ -56,7 +56,8 @@
                                      <span><a class="delete-unit"
                                     data-unitname="{{ $unit->unit_name }}"
                                     data-unitcode="{{ $unit->unit_code }}"
-                                     data-unitid="{{ $unit->id }}"> <i class="fas fa-trash-alt"></i></a></span>
+                                     data-unitid="{{ $unit->id }}"> <i class="fas fa-trash-alt"></i></a>
+                                </span>
 
                             </span>
 
@@ -77,7 +78,7 @@
                    {{ (!is_null($showLinks) && $showLinks) ? $units->links() : '' }}
 
 
-                   <form action="{{ route('search-units') }}" method="POST">
+                   <form action="{{ route('search-units') }}" method="GET">
                        @csrf
                         <div class="row">
                             <div class="form-group col-md-6">
