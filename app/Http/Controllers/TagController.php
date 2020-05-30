@@ -24,15 +24,16 @@ class TagController extends Controller
             'tag_name'=>'required',
         ]);
 
+
+
+
         $tagName=$request->input('tag_name');
-        $tag=Tag::where('tag','=', $tagName)->get();
 
-        if(count($tag)>0){
-
+        if($this->tagNameExists($tagName)){
             $request->session()->flash('message', 'Tag '.$tagName.' already exists');
-
             return redirect()->back();
         }
+
 
         $newTag=new Tag();
         $newTag->tag=$tagName;
@@ -98,6 +99,7 @@ class TagController extends Controller
 
         if($this->tagNameExists($tagName)){
 
+            Session::flash('message','Tag Name {'.$tagName.'}  already exists');
             return redirect()->back();
         }
 
@@ -113,22 +115,21 @@ class TagController extends Controller
 
 
        /**
-     * التحقق من اسم اليونت موجود لو لا
+     * التحقق من اسم التاك موجود لو لا
      */
     private function tagNameExists($tagName){
 
         $tag=Tag::where(
             'tag', '=' , $tagName
-    )->first();
+    )->get();
 
-    if(! is_null($tagName)){
+    if(count($tag)>0){
 
-            Session::flash('message','Tag Name {'.$tagName.'}  already exists');
-            return false;
+            return true;
 
          }
 
-         return true;
+         return false;
 
 
     }
